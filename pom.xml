@@ -16,7 +16,7 @@
         <jenkins.version>1.642.4</jenkins.version>
         <java.level>8</java.level>
     </properties>
-    <name>Folder Properties</name>
+    <name>Folder Properties Plugin</name>
     <description>Allows defining properties for folders which are then inherited by all contained jobs.</description>
     <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
