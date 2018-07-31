@@ -39,9 +39,23 @@ Pipeline jobs can use step `withFolderProperties` to access them:
 Jenkins deployments using some of the older versions of the
 [Structs Plugin](https://wiki.jenkins.io/display/JENKINS/Structs+plugin) will need to do this using the `wrap` meta-step:
 
-
     wrap([$class: 'ParentFolderBuildWrapper']) {
         echo("Foo: ${env.FOO}")
+    }
+
+In Job DSL:
+
+    folder(folderName) {
+    	properties {
+    		folderProperties {
+    			properties {
+    				stringProperty {
+    					key('FOO')
+    					value('bar')
+    				}
+    			}
+    		}
+    	}
     }
 
 
