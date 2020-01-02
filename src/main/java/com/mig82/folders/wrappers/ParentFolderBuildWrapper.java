@@ -31,6 +31,12 @@ public class ParentFolderBuildWrapper extends SimpleBuildWrapper{
 	@DataBoundConstructor
 	public ParentFolderBuildWrapper(){}
 
+
+	@Override
+	protected boolean runPreCheckout() {
+        return true;
+    }
+	
 	//Add the properties from the parent ProjectFolder folder to the context of the job before it starts.
 	@Override
 	public void setUp(
