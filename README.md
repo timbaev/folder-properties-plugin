@@ -30,7 +30,7 @@ configuration page in order to be able to access these properties as they would 
 
     echo $FOO
 
-Pipeline jobs can use step `withFolderProperties` to access them:
+Pipeline jobs can use step `withFolderProperties` to access them either inside or outside a node step:
 
     withFolderProperties{
         echo("Foo: ${env.FOO}")
@@ -39,11 +39,13 @@ Pipeline jobs can use step `withFolderProperties` to access them:
 Jenkins deployments using some of the older versions of the
 [Structs Plugin](https://wiki.jenkins.io/display/JENKINS/Structs+plugin) will need to do this using the `wrap` meta-step:
 
-
-    wrap([$class: 'ParentFolderBuildWrapper']) {
-        echo("Foo: ${env.FOO}")
+    node {
+        wrap([$class: 'ParentFolderBuildWrapper']) {
+            echo("Foo: ${env.FOO}")
+        }
     }
 
+The wrapped syntax must run inside a node step.
 
 **Author:** Miguelángel Fernández Mendoza.
 

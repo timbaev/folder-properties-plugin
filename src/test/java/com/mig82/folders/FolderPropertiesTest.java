@@ -48,6 +48,32 @@ public class FolderPropertiesTest {
 	}
 
 	@Test
+	public void testPipelineInNodeNoWrap() throws Exception {
+		WorkflowJob p = f.createProject(WorkflowJob.class, "p");
+		String script =
+				"node {\n" +
+						"  withFolderProperties {\n" +
+						"    echo(\"key1: ${env.key1}\")\n" +
+						"  }\n" +
+						"}";
+		p.setDefinition(new CpsFlowDefinition(script, true));
+		WorkflowRun b = r.assertBuildStatusSuccess(p.scheduleBuild2(0));
+		r.assertLogContains("key1: value1", b);
+	}
+
+	@Test
+	public void testPipelineOutNode() throws Exception {
+		WorkflowJob p = f.createProject(WorkflowJob.class, "p");
+		String script =
+				"  withFolderProperties {\n" +
+						"    echo(\"key1: ${env.key1}\")\n" +
+						"}";
+		p.setDefinition(new CpsFlowDefinition(script, true));
+		WorkflowRun b = r.assertBuildStatusSuccess(p.scheduleBuild2(0));
+		r.assertLogContains("key1: value1", b);
+	}
+
+	@Test
 	public void testFreeStyleProject() throws Exception {
 		FreeStyleProject p = f.createProject(FreeStyleProject.class, "p");
 		p.getBuildWrappersList().add(new ParentFolderBuildWrapper());
