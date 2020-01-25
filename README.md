@@ -37,7 +37,8 @@ Pipeline jobs can use step `withFolderProperties` to access them either inside o
     }
 
 Jenkins deployments using some of the older versions of the
-[Structs Plugin](https://wiki.jenkins.io/display/JENKINS/Structs+plugin) will need to do this using the `wrap` meta-step:
+[Structs Plugin](https://wiki.jenkins.io/display/JENKINS/Structs+plugin) will need to do this using the `wrap` meta-step.
+In such scenarios you should note that the wrapped syntax must run inside a node step.
 
     node {
         wrap([$class: 'ParentFolderBuildWrapper']) {
@@ -45,15 +46,13 @@ Jenkins deployments using some of the older versions of the
         }
     }
 
-The wrapped syntax must run inside a node step.
+## Authors:
 
-**Author:** Miguelángel Fernández Mendoza.
+* [Miguelángel Fernández Mendoza](https://github.com/mig82).
+* [GongYi](https://github.com/topikachu).
 
 ## References
 
-Site: https://mig82.github.io/folder-properties-plugin
-
-Dependencies: https://mig82.github.io/folder-properties-plugin/doc/dependencies.html
-
-Javadoc: https://mig82.github.io/folder-properties-plugin/apidocs
-
+* Site: https://mig82.github.io/folder-properties-plugin
+* Dependencies: https://mig82.github.io/folder-properties-plugin/doc/dependencies.html
+* Javadoc: https://mig82.github.io/folder-properties-plugin/apidocs
