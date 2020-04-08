@@ -46,6 +46,21 @@ In such scenarios you should note that the wrapped syntax must run inside a node
         }
     }
 
+In Job DSL:
+
+    folder(folderName) {
+        properties {
+            folderProperties {
+                properties {
+                    stringProperty {
+                        key('FOO')
+                        value('bar')
+                    }
+                }
+            }
+        }
+    }
+
 ## Authors & Contributors:
 
 * [Miguelángel Fernández Mendoza](https://github.com/mig82).
