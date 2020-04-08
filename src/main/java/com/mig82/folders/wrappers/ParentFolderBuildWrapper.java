@@ -34,8 +34,8 @@ public class ParentFolderBuildWrapper extends SimpleBuildWrapper{
 
 	@Override
 	protected boolean runPreCheckout() {
-        return true;
-    }
+		return true;
+	}
 	
 	//Add the properties from the parent ProjectFolder folder to the context of the job before it starts.
 	@Override
