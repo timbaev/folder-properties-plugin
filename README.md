@@ -25,10 +25,34 @@ Since this is my first version of this and I'm still missing the tests...
 In structures where two or more folders are nested, any property defined for a folder will be overridden by any other
 property of the same name defined by one of its sub-folders.
 
+<img src="./pics/folder-properties-1.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/>
+
+### Freestyle Jobs
+
 Freestyle jobs must opt into the `Folder Properties` build wrapper from the `Build Environment` section of their
 configuration page in order to be able to access these properties as they would any other environment variable.
 
-    echo $FOO
+<img src="./pics/freestyle-build-env.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/><br>
+
+Only then will they inherit properties defined by their parent or ancestor folders —e.g. Running `echo $FOO` in a Shell build step:
+
+<img src="./pics/freestyle-example-1.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/><br>
+
+#### SCM Step in Freestyle Jobs
+
+Starting with version 1.2, Freestyle jobs can also use folder properties to **define SCM parameters** —e.g. By defining an `SCM_URL` property pointing to the Git repository and a `BRANCH_SELECTOR` property pointing to the branch, tag or commit to be checked out:
+
+<img src="./pics/freestyle-example-scm-1.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/><br>
+
+Then, descendant freestyle jobs can use that either as `$SCM_URL` and `$BRANCH_SELECTOR`:
+
+<img src="./pics/freestyle-example-scm-2.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/><br>
+
+ or `${SCM_URL}` and `${BRANCH_SELECTOR}`:
+
+<img src="./pics/freestyle-example-scm-3.png" align="center" alt="freestyle build env" style="width: 80%; height: auto"/><br>
+
+### Pipeline Jobs
 
 Pipeline jobs can use step `withFolderProperties` to access them either inside or outside a node step:
 
@@ -46,7 +70,9 @@ In such scenarios you should note that the wrapped syntax must run inside a node
         }
     }
 
-In Job DSL:
+### Job DSL
+
+If you use [Job DSL](https://plugins.jenkins.io/job-dsl/) you can create folders with predefined properties like this:
 
     folder(folderName) {
         properties {
