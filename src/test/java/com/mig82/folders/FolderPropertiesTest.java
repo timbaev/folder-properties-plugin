@@ -3,12 +3,8 @@ package com.mig82.folders;
 import com.cloudbees.hudson.plugins.folder.Folder;
 import com.mig82.folders.properties.FolderProperties;
 import com.mig82.folders.properties.StringProperty;
-import com.mig82.folders.wrappers.ParentFolderBuildWrapper;
-import hudson.Functions;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import hudson.tasks.BatchFile;
-import hudson.tasks.Shell;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
@@ -29,7 +25,10 @@ public class FolderPropertiesTest {
 	public void setUp() throws IOException {
 		f = r.jenkins.createProject(Folder.class, "f");
 		FolderProperties properties = new FolderProperties();
-		properties.setProperties(new StringProperty[]{new StringProperty("key1", "value1")});
+		properties.setProperties(new StringProperty[]{
+				new StringProperty("key1", "value1"),
+				new StringProperty("key2", "value2")
+		});
 		f.addProperty(properties);
 	}
 
@@ -74,18 +73,49 @@ public class FolderPropertiesTest {
 	}
 
 	@Test
-	public void testFreeStyleProject() throws Exception {
-		FreeStyleProject p = f.createProject(FreeStyleProject.class, "p");
-		p.getBuildWrappersList().add(new ParentFolderBuildWrapper());
-		p.getBuildersList().add(Functions.isWindows() ?
-				new BatchFile("echo key1: %key1%") :
-				new Shell("echo key1: $key1"));
+	public void testFreestyle() throws Exception {
+
+		//Create a freestyle project which attempts to use props from parent folder.
+		FreeStyleProject p = FreestyleTestHelper.createJob(f, "p");
+		FreestyleTestHelper.addEcho(p, "key1");
+		FreestyleTestHelper.addEcho(p, "key2");
+
+		//Run the build.
 		FreeStyleBuild b = r.assertBuildStatusSuccess(p.scheduleBuild2(0));
+
+		//Check that both properties were accessible.
 		r.assertLogContains("key1: value1", b);
+		r.assertLogContains("key2: value2", b);
 	}
 
 	@Test
-	public void testSubFolder() throws Exception {
+	public void testFreestyleInSubFolder() throws Exception {
+
+		//Create a subfolder.
+		Folder sub = f.createProject(Folder.class, "sub");
+
+		//Add a property in the subfolder that overrides another in the parent folder.
+		FolderProperties properties = new FolderProperties();
+		properties.setProperties(new StringProperty[]{
+				new StringProperty("key1", "override")
+		});
+		sub.addProperty(properties);
+
+		//Create a freestyle project in the subfolder that attempts to use props from parent and grandparent.
+		FreeStyleProject p = FreestyleTestHelper.createJob(sub, "p");
+		FreestyleTestHelper.addEcho(p, "key1");
+		FreestyleTestHelper.addEcho(p, "key2");
+
+		//Run the build.
+		FreeStyleBuild b = r.assertBuildStatusSuccess(p.scheduleBuild2(0));
+
+		//Check that both properties were accessible.
+		r.assertLogContains("key1: override", b);
+		r.assertLogContains("key2: value2", b);
+	}
+
+	@Test
+	public void testPipelineInSubFolder() throws Exception {
 		Folder sub = f.createProject(Folder.class, "sub");
 		FolderProperties properties = new FolderProperties();
 		properties.setProperties(new StringProperty[]{new StringProperty("key1", "override")});
@@ -95,11 +125,13 @@ public class FolderPropertiesTest {
 				"node {\n" +
 						"  wrap([$class: 'ParentFolderBuildWrapper']){\n" +
 						"    echo(\"key1: ${env.key1}\")\n" +
+						"    echo(\"key2: ${env.key2}\")\n" +
 						"  }\n" +
 						"}";
 		p.setDefinition(new CpsFlowDefinition(script, true));
 		WorkflowRun b = r.assertBuildStatusSuccess(p.scheduleBuild2(0));
 		r.assertLogContains("key1: override", b);
+		r.assertLogContains("key2: value2", b);
 	}
 
 	@Test
