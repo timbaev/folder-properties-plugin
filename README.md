@@ -46,10 +46,11 @@ In such scenarios you should note that the wrapped syntax must run inside a node
         }
     }
 
-## Authors:
+## Authors & Contributors:
 
 * [Miguelángel Fernández Mendoza](https://github.com/mig82).
 * [GongYi](https://github.com/topikachu).
+* [Stefan Hirche](https://github.com/StefanHirche)
 
 ## References
 
