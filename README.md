@@ -70,6 +70,24 @@ In such scenarios you should note that the wrapped syntax must run inside a node
         }
     }
 
+### Declarative Pipeline Jobs
+
+Declarative pipeline jobs can also use the `options` directive to leverage folder properties as follows:
+
+    pipeline {
+        agent any
+        options {
+            withFolderProperties()
+        }
+        stages {
+            stage('Test') {
+                steps {
+                    echo("Foo: ${env.FOO}")
+                }
+            }
+        }
+    }
+
 ### Job DSL
 
 If you use [Job DSL](https://plugins.jenkins.io/job-dsl/) you can create folders with predefined properties like this:
