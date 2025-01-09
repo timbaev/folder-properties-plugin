@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.4</version>
+        <version>5.4</version>
         <relativePath />
     </parent>
     <groupId>com.mig82</groupId>
@@ -13,11 +13,10 @@
     <packaging>hpi</packaging>
     <properties>
         <!--jenkins.version>2.60.3</jenkins.version-->
-        <jenkins.version>1.642.4</jenkins.version>
+        <jenkins.version>2.479.2</jenkins.version>
         <java.level>8</java.level>
     </properties>
     <name>Folder Properties Plugin</name>
-    <description>Allows defining properties for folders which are then inherited by all contained jobs.</description>
     <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
         <license>
@@ -57,13 +56,24 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-2.479.x</artifactId>
+                <version>3875.v1df09947cde6</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
 
         <!--Need this in order to define properties for folders-->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>cloudbees-folder</artifactId>
-            <version>5.14</version>
         </dependency>
 
         <!--Need this in order to be able to test on pipeline jobs-->
@@ -79,22 +89,12 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>script-security</artifactId>
-            <version>1.18</version>
-        </dependency>
-
-        <!--Need this to be able to target Jenkins 1.x according to
-        https://wiki.jenkins.io/display/JENKINS/Structs+plugin-->
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>structs</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <!--Need this of pipeline custom step -->
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-step-api</artifactId>
-            <version>2.0</version>
         </dependency>
 
     </dependencies>

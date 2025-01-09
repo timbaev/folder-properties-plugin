@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<div>
+    <h1>Plugin Information</h1>
+    <p>
+        Allows defining properties for folders which are then inherited by all contained jobs.
+    </p>
+</div>
